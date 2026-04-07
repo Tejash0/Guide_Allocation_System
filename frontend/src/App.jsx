@@ -5,10 +5,12 @@ import FacultyRegister from './pages/FacultyRegister.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import AdminDashboard from './pages/AdminDashboard.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 
 export default function App() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
@@ -24,6 +26,7 @@ export default function App() {
         />
         <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }
