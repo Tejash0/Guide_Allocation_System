@@ -34,3 +34,30 @@ export async function saveInterests(interests) {
   });
   return res.json();
 }
+
+export async function getProject() {
+  const res = await fetch(`${BASE_URL}/project`, { headers: headers() });
+  return res.json();
+}
+
+export async function saveProject(project_title, project_description, tech_stack) {
+  const res = await fetch(`${BASE_URL}/project`, {
+    method: 'PATCH',
+    headers: headers(),
+    body: JSON.stringify({ project_title, project_description, tech_stack }),
+  });
+  return res.json();
+}
+
+export async function getStudentNotifications() {
+  const res = await fetch(`${BASE_URL}/notifications`, { headers: headers() });
+  return res.json();
+}
+
+export async function markStudentNotificationsRead() {
+  const res = await fetch(`${BASE_URL}/notifications/read`, {
+    method: 'PATCH',
+    headers: headers(),
+  });
+  return res.json();
+}

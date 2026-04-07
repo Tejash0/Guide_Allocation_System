@@ -52,4 +52,53 @@ router.post('/preference', (req, res) => {
   res.json({ message: 'Preference saved' });
 });
 
+// Get student's project submission
+router.get('/project', (req, res) => {
+  if (req.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
+  const student = db.prepare(
+    'SELECT project_title, project_description, tech_stack FROM students WHERE id = ?'
+  ).get(req.user.id);
+  if (!student) return res.status(404).json({ error: 'Student not found' });
+  res.json(student);
+});
+
+// Save/update student's project submission (only if guide is confirmed)
+router.patch('/project', (req, res) => {
+  if (req.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
+
+  const accepted = db.prepare(
+    "SELECT id FROM requests WHERE student_id = ? AND status = 'accepted'"
+  ).get(req.user.id);
+  if (!accepted) {
+    return res.status(403).json({ error: 'You can only submit a project once your guide is confirmed' });
+  }
+
+  const { project_title, project_description, tech_stack } = req.body;
+  if (!project_title || !project_title.trim()) {
+    return res.status(400).json({ error: 'project_title is required' });
+  }
+
+  db.prepare(
+    'UPDATE students SET project_title = ?, project_description = ?, tech_stack = ? WHERE id = ?'
+  ).run(project_title.trim(), (project_description || '').trim(), (tech_stack || '').trim(), req.user.id);
+
+  res.json({ message: 'Project saved' });
+});
+
+// Get unread student notifications
+router.get('/notifications', (req, res) => {
+  if (req.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
+  const rows = db.prepare(
+    'SELECT id, message, created_at FROM student_notifications WHERE student_id = ? AND read = 0 ORDER BY created_at DESC'
+  ).all(req.user.id);
+  res.json(rows);
+});
+
+// Mark all student notifications as read
+router.patch('/notifications/read', (req, res) => {
+  if (req.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
+  db.prepare('UPDATE student_notifications SET read = 1 WHERE student_id = ?').run(req.user.id);
+  res.json({ message: 'Marked as read' });
+});
+
 module.exports = router;

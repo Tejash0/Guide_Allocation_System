@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Navigate, Link } from 'react-router-dom';
 import { login } from '../api/auth.js';
 import AuthLayout from './AuthLayout.jsx';
 
 export default function Login() {
   const navigate = useNavigate();
+
+  // Already logged in — send straight to dashboard
+  if (localStorage.getItem('token')) {
+    return <Navigate to="/dashboard" replace />;
+  }
   const [form, setForm]     = useState({ email: '', password: '' });
   const [error, setError]   = useState('');
   const [pendingApproval, setPendingApproval] = useState(false);

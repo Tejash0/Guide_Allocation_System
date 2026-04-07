@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { registerFaculty } from '../api/auth.js';
 import AuthLayout from './AuthLayout.jsx';
 
@@ -19,6 +19,8 @@ export default function FacultyRegister() {
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  if (localStorage.getItem('token')) return <Navigate to="/dashboard" replace />;
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });

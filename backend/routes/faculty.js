@@ -27,7 +27,15 @@ router.get('/profile', requireAuth, (req, res) => {
     'SELECT id, name, email, department, domain, max_teams FROM faculty WHERE id = ?'
   ).get(req.user.id);
   if (!faculty) return res.status(404).json({ error: 'Not found' });
-  res.json(faculty);
+
+  const { cnt: accepted_students_count } = db.prepare(
+    "SELECT COUNT(*) AS cnt FROM requests WHERE faculty_id = ? AND status = 'accepted'"
+  ).get(req.user.id);
+  const { cnt: pending_requests_count } = db.prepare(
+    "SELECT COUNT(*) AS cnt FROM requests WHERE faculty_id = ? AND status = 'pending'"
+  ).get(req.user.id);
+
+  res.json({ ...faculty, accepted_students_count, pending_requests_count });
 });
 
 // GET unread notifications for logged-in faculty

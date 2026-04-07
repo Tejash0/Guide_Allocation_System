@@ -25,3 +25,20 @@ export async function getIncomingRequests() {
   const res = await fetch(`${BASE_URL}/incoming`, { headers: headers() });
   return res.json();
 }
+
+export async function updateRequestStatus(requestId, status) {
+  const res = await fetch(`${BASE_URL}/${requestId}/status`, {
+    method: 'PATCH',
+    headers: headers(),
+    body: JSON.stringify({ status }),
+  });
+  return res.json();
+}
+
+export async function withdrawRequest(requestId) {
+  const res = await fetch(`${BASE_URL}/${requestId}`, {
+    method: 'DELETE',
+    headers: headers(),
+  });
+  return res.json();
+}

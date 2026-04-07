@@ -53,4 +53,20 @@ db.exec(`
   );
 `);
 
+// Sprint 3 — project submission columns on students
+try { db.exec('ALTER TABLE students ADD COLUMN project_title TEXT DEFAULT NULL'); } catch (_) {}
+try { db.exec('ALTER TABLE students ADD COLUMN project_description TEXT DEFAULT NULL'); } catch (_) {}
+try { db.exec('ALTER TABLE students ADD COLUMN tech_stack TEXT DEFAULT NULL'); } catch (_) {}
+
+// Sprint 3 — student notifications (guide request accepted/rejected)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS student_notifications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id INTEGER NOT NULL,
+    message TEXT NOT NULL,
+    read INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
+
 module.exports = db;
