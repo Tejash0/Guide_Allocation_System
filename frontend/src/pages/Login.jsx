@@ -7,9 +7,14 @@ export default function Login() {
   const navigate = useNavigate();
   const [form, setForm]     = useState({ email: '', password: '' });
   const [error, setError]   = useState('');
+  const [pendingApproval, setPendingApproval] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setPendingApproval(false);
+    setError('');
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -21,7 +26,11 @@ export default function Login() {
       localStorage.setItem('token', result.token);
       localStorage.setItem('user', JSON.stringify(result.user));
       navigate(result.user.role === 'admin' ? '/admin' : '/dashboard');
+    } else if (result.error === 'Account pending admin approval') {
+      setPendingApproval(true);
+      setError('');
     } else {
+      setPendingApproval(false);
       setError(result.error || 'Login failed');
     }
   };
@@ -47,6 +56,24 @@ export default function Login() {
           Sign in to your account to continue
         </p>
       </div>
+
+      {/* Pending approval notice — shown instead of generic error for 403 */}
+      {pendingApproval && (
+        <div className="auth-field-anim" style={{
+          animationDelay: '0s',
+          background: 'rgba(201,168,76,0.1)',
+          border: '1px solid rgba(201,168,76,0.35)',
+          borderRadius: 8, padding: '12px 16px',
+          marginBottom: 20,
+        }}>
+          <div style={{ fontWeight: 700, fontSize: '0.825rem', color: '#7a6a40', marginBottom: 4 }}>
+            Account awaiting approval
+          </div>
+          <div style={{ fontSize: '0.8rem', color: '#7a6a40', lineHeight: 1.5 }}>
+            Your faculty account has not been approved yet. An admin will review your registration and you'll receive an in-app notification once it's active.
+          </div>
+        </div>
+      )}
 
       {/* Error */}
       {error && (

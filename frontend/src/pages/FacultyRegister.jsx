@@ -66,12 +66,32 @@ export default function FacultyRegister() {
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: '2rem', fontWeight: 600, color: '#0d1b2a', marginBottom: 10,
           }}>Registration Submitted</h2>
-          <p style={{ color: '#6b7280', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: 12 }}>
-            Your faculty registration is pending admin approval.
+          <p style={{ color: '#6b7280', fontSize: '0.875rem', lineHeight: 1.6, marginBottom: 16 }}>
+            Your account is pending admin approval. <strong>You will not be able to log in until an admin approves your account.</strong>
           </p>
-          <p style={{ color: '#a0998f', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: 28 }}>
-            You will receive a notification once your account has been reviewed. This usually takes 1–2 business days.
-          </p>
+
+          {/* What happens next — left-aligned list inside a card */}
+          <div style={{
+            background: 'rgba(201,168,76,0.07)',
+            border: '1px solid rgba(201,168,76,0.25)',
+            borderRadius: 10, padding: '14px 18px',
+            textAlign: 'left', marginBottom: 28,
+          }}>
+            <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#a0998f', marginBottom: 10 }}>What happens next</div>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {[
+                'An admin reviews your registration',
+                'You receive an in-app notification once approved',
+                'You can then sign in and appear in the guides list',
+              ].map((step, i) => (
+                <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', fontSize: '0.82rem', color: '#5a4e2f' }}>
+                  <span style={{ color: '#c9a84c', fontWeight: 700, flexShrink: 0 }}>{i + 1}.</span>
+                  {step}
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <Link to="/login">
             <button className="auth-submit" style={{ width: '100%' }}>
               Back to Sign In
