@@ -38,9 +38,35 @@ router.post('/faculty/:id/approve', (req, res) => {
 });
 
 router.delete('/faculty/:id', (req, res) => {
-  const result = db.prepare('DELETE FROM faculty WHERE id = ?').run(req.params.id);
-  if (result.changes === 0) return res.status(404).json({ error: 'Faculty not found' });
-  res.json({ message: 'Faculty removed' });
+  const faculty = db.prepare('SELECT id FROM faculty WHERE id = ?').get(req.params.id);
+  if (!faculty) return res.status(404).json({ error: 'Faculty not found' });
+
+  const cascadeDelete = db.transaction((facultyId) => {
+    // 1. Remove student notifications that belong to requests against this faculty
+    db.prepare(
+      `DELETE FROM student_notifications
+       WHERE student_id IN (
+         SELECT student_id FROM requests WHERE faculty_id = ?
+       )`
+    ).run(facultyId);
+
+    // 2. Remove faculty-side notifications
+    db.prepare('DELETE FROM notifications WHERE faculty_id = ?').run(facultyId);
+
+    // 3. Remove all requests involving this faculty
+    db.prepare('DELETE FROM requests WHERE faculty_id = ?').run(facultyId);
+
+    // 4. Remove the faculty row itself
+    db.prepare('DELETE FROM faculty WHERE id = ?').run(facultyId);
+  });
+
+  try {
+    cascadeDelete(req.params.id);
+    res.json({ message: 'Faculty removed' });
+  } catch (err) {
+    console.error('Faculty delete transaction failed:', err);
+    res.status(500).json({ error: 'Failed to remove faculty' });
+  }
 });
 
 router.patch('/faculty/:id/slots', (req, res) => {
