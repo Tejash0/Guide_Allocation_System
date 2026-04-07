@@ -1,6 +1,22 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: Ready to execute
+last_updated: "2026-04-07T15:37:28.611Z"
+progress:
+  total_phases: 2
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+---
+
 # Project State
 
 ## Current Position
+
+Phase: 01 (Domain Filter & Faculty Registration UX) — EXECUTING
+Plan: 2 of 2
 
 - **Milestone**: v1.0 — Complete Guide Allocation System
 - **Current Phase**: None started — ready for Phase 1
@@ -13,6 +29,7 @@ Guide Allocation System — web app for student-faculty guide matching at an aca
 ## What's Built
 
 All 10 user stories from the User Stories document are substantially implemented. The system is functional end-to-end:
+
 - Student/faculty registration and login (with admin approval gate for faculty)
 - Available guides listing (approved faculty only)
 - Guide request lifecycle (send → accept/reject → auto-cascade)
@@ -23,7 +40,7 @@ All 10 user stories from the User Stories document are substantially implemented
 ## Remaining Gaps
 
 1. **REQ-08**: Domain filter on available guides list — no filter UI or backend support
-2. **UX gap**: Faculty who register don't get clear "pending approval" feedback; they just get a 403 on next login attempt
+2. **UX gap**: ~~Faculty who register don't get clear "pending approval" feedback~~ — RESOLVED by 01-02 (explicit pending messaging on registration success and login 403)
 
 ## Key Files
 
@@ -42,6 +59,8 @@ All 10 user stories from the User Stories document are substantially implemented
 | 2026-04-07 | Initialized project — brownfield, all core user stories validated |
 | 2026-04-07 | Email notifications out of scope (no SMTP infrastructure) |
 | 2026-04-07 | Mode: interactive, Granularity: coarse, Model: balanced |
+| 2026-04-07 | Login.jsx uses separate pendingApproval boolean state to distinguish 403 pending-faculty from wrong-password errors |
+| 2026-04-07 | Amber card with numbered "What happens next" list added to FacultyRegister.jsx success state for unambiguous pending-approval feedback |
 
 ## Session Notes
 

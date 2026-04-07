@@ -6,7 +6,7 @@ The core system is functional. This milestone closes the remaining user story ga
 
 ## Phases
 
-- [ ] **Phase 1: Domain Filter & Faculty Registration UX** - Add guide domain filter and post-registration approval feedback
+- [x] **Phase 1: Domain Filter & Faculty Registration UX** - Add guide domain filter and post-registration approval feedback (completed 2026-04-07)
 - [ ] **Phase 2: Polish & Hardening** - Frontend error handling, API robustness, and edge case fixes
 
 ## Phase Details
@@ -21,8 +21,8 @@ The core system is functional. This milestone closes the remaining user story ga
   3. Filter works without a page reload
 
 Plans:
-- [ ] 01-01: Add domain filter to available guides (backend + frontend)
-- [ ] 01-02: Faculty registration post-submit pending state UX
+- [x] 01-01: Add domain filter to available guides (backend + frontend)
+- [x] 01-02: Faculty registration post-submit pending state UX
 
 ### Phase 2: Polish & Hardening
 **Goal**: Address the highest-impact reliability concerns from CONCERNS.md that affect correctness and user experience.
