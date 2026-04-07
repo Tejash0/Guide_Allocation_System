@@ -2,21 +2,21 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-last_updated: "2026-04-07T15:37:28.611Z"
+status: Executing Phase 02
+last_updated: "2026-04-07T20:37:32.184Z"
 progress:
   total_phases: 2
-  completed_phases: 0
-  total_plans: 2
-  completed_plans: 1
+  completed_phases: 1
+  total_plans: 5
+  completed_plans: 4
 ---
 
 # Project State
 
 ## Current Position
 
-Phase: 01 (Domain Filter & Faculty Registration UX) — EXECUTING
-Plan: 2 of 2
+Phase: 02 (Polish & Hardening) — EXECUTING
+Plan: 2 of 3 (02-02 complete, 02-03 remaining)
 
 - **Milestone**: v1.0 — Complete Guide Allocation System
 - **Current Phase**: None started — ready for Phase 1
@@ -63,6 +63,7 @@ All 10 user stories from the User Stories document are substantially implemented
 | 2026-04-07 | Domain chips derived from loaded guides data — no separate domains API needed |
 | 2026-04-07 | Login.jsx uses separate pendingApproval boolean state to distinguish 403 pending-faculty from wrong-password errors |
 | 2026-04-07 | Amber card with numbered "What happens next" list added to FacultyRegister.jsx success state for unambiguous pending-approval feedback |
+| 2026-04-07 | Admin faculty DELETE uses db.transaction() cascade: student_notifications (subselect) -> notifications -> requests -> faculty, with pre-flight 404 guard |
 
 ## Session Notes
 

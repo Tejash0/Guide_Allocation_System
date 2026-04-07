@@ -35,6 +35,6 @@ Plans:
   4. React component crash shows error boundary instead of blank page
 
 Plans:
-- [ ] 02-01: Frontend error handling (401 interceptor, try/catch in API clients)
-- [ ] 02-02: Backend data integrity (admin delete cascade, INSERT OR REPLACE fix)
-- [ ] 02-03: React error boundary
+- [x] 02-01: Frontend error handling (401 interceptor, try/catch in API clients)
+- [x] 02-02: Backend data integrity (admin delete cascade, INSERT OR REPLACE fix)
+- [x] 02-03: React error boundary
