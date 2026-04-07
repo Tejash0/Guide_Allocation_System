@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:3001/api/requests';
+import { apiFetch, BASE as BASE_URL } from './apiClient.js';
+
+const BASE = `${BASE_URL}/requests`;
 
 function headers() {
   return {
@@ -8,37 +10,32 @@ function headers() {
 }
 
 export async function sendRequest(faculty_id) {
-  const res = await fetch(`${BASE_URL}`, {
+  return apiFetch(`${BASE}`, {
     method: 'POST',
     headers: headers(),
     body: JSON.stringify({ faculty_id }),
   });
-  return res.json();
 }
 
 export async function getMyRequests() {
-  const res = await fetch(`${BASE_URL}/my`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/my`, { headers: headers() });
 }
 
 export async function getIncomingRequests() {
-  const res = await fetch(`${BASE_URL}/incoming`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/incoming`, { headers: headers() });
 }
 
 export async function updateRequestStatus(requestId, status) {
-  const res = await fetch(`${BASE_URL}/${requestId}/status`, {
+  return apiFetch(`${BASE}/${requestId}/status`, {
     method: 'PATCH',
     headers: headers(),
     body: JSON.stringify({ status }),
   });
-  return res.json();
 }
 
 export async function withdrawRequest(requestId) {
-  const res = await fetch(`${BASE_URL}/${requestId}`, {
+  return apiFetch(`${BASE}/${requestId}`, {
     method: 'DELETE',
     headers: headers(),
   });
-  return res.json();
 }

@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:3001/api/student';
+import { apiFetch, BASE as BASE_URL } from './apiClient.js';
+
+const BASE = `${BASE_URL}/student`;
 
 function headers() {
   return {
@@ -8,56 +10,48 @@ function headers() {
 }
 
 export async function getPreference() {
-  const res = await fetch(`${BASE_URL}/preference`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/preference`, { headers: headers() });
 }
 
 export async function setPreference(faculty_id) {
-  const res = await fetch(`${BASE_URL}/preference`, {
+  return apiFetch(`${BASE}/preference`, {
     method: 'POST',
     headers: headers(),
     body: JSON.stringify({ faculty_id }),
   });
-  return res.json();
 }
 
 export async function getInterests() {
-  const res = await fetch(`${BASE_URL}/interests`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/interests`, { headers: headers() });
 }
 
 export async function saveInterests(interests) {
-  const res = await fetch(`${BASE_URL}/interests`, {
+  return apiFetch(`${BASE}/interests`, {
     method: 'PATCH',
     headers: headers(),
     body: JSON.stringify({ interests }),
   });
-  return res.json();
 }
 
 export async function getProject() {
-  const res = await fetch(`${BASE_URL}/project`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/project`, { headers: headers() });
 }
 
 export async function saveProject(project_title, project_description, tech_stack) {
-  const res = await fetch(`${BASE_URL}/project`, {
+  return apiFetch(`${BASE}/project`, {
     method: 'PATCH',
     headers: headers(),
     body: JSON.stringify({ project_title, project_description, tech_stack }),
   });
-  return res.json();
 }
 
 export async function getStudentNotifications() {
-  const res = await fetch(`${BASE_URL}/notifications`, { headers: headers() });
-  return res.json();
+  return apiFetch(`${BASE}/notifications`, { headers: headers() });
 }
 
 export async function markStudentNotificationsRead() {
-  const res = await fetch(`${BASE_URL}/notifications/read`, {
+  return apiFetch(`${BASE}/notifications/read`, {
     method: 'PATCH',
     headers: headers(),
   });
-  return res.json();
 }

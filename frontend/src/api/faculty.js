@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:3001/api/faculty';
+import { apiFetch, BASE as BASE_URL } from './apiClient.js';
+
+const BASE = `${BASE_URL}/faculty`;
 
 function authHeaders() {
   return {
@@ -9,35 +11,31 @@ function authHeaders() {
 
 export async function getAvailableGuides(domain) {
   const url = domain && domain.trim().length > 0
-    ? `${BASE_URL}/available?domain=${encodeURIComponent(domain.trim())}`
-    : `${BASE_URL}/available`;
-  const res = await fetch(url);
-  return res.json();
+    ? `${BASE}/available?domain=${encodeURIComponent(domain.trim())}`
+    : `${BASE}/available`;
+  // /available is unauthenticated — no auth header needed
+  return apiFetch(url);
 }
 
 export async function getFacultyProfile() {
-  const res = await fetch(`${BASE_URL}/profile`, { headers: authHeaders() });
-  return res.json();
+  return apiFetch(`${BASE}/profile`, { headers: authHeaders() });
 }
 
 export async function getNotifications() {
-  const res = await fetch(`${BASE_URL}/notifications`, { headers: authHeaders() });
-  return res.json();
+  return apiFetch(`${BASE}/notifications`, { headers: authHeaders() });
 }
 
 export async function markNotificationsRead() {
-  const res = await fetch(`${BASE_URL}/notifications/read`, {
+  return apiFetch(`${BASE}/notifications/read`, {
     method: 'PATCH',
     headers: authHeaders(),
   });
-  return res.json();
 }
 
 export async function updateFacultyProfile(domain) {
-  const res = await fetch(`${BASE_URL}/profile`, {
+  return apiFetch(`${BASE}/profile`, {
     method: 'PATCH',
     headers: authHeaders(),
     body: JSON.stringify({ domain }),
   });
-  return res.json();
 }
