@@ -39,7 +39,7 @@ All 10 user stories from the User Stories document are substantially implemented
 
 ## Remaining Gaps
 
-1. **REQ-08**: Domain filter on available guides list — no filter UI or backend support
+1. ~~**REQ-08**: Domain filter on available guides list~~ — RESOLVED by 01-01 (domain chip filter UI + backend LIKE query)
 2. **UX gap**: ~~Faculty who register don't get clear "pending approval" feedback~~ — RESOLVED by 01-02 (explicit pending messaging on registration success and login 403)
 
 ## Key Files
@@ -59,6 +59,8 @@ All 10 user stories from the User Stories document are substantially implemented
 | 2026-04-07 | Initialized project — brownfield, all core user stories validated |
 | 2026-04-07 | Email notifications out of scope (no SMTP infrastructure) |
 | 2026-04-07 | Mode: interactive, Granularity: coarse, Model: balanced |
+| 2026-04-07 | Domain filter uses SQL LOWER(f.domain) LIKE LOWER(?) — substring match, case-insensitive |
+| 2026-04-07 | Domain chips derived from loaded guides data — no separate domains API needed |
 | 2026-04-07 | Login.jsx uses separate pendingApproval boolean state to distinguish 403 pending-faculty from wrong-password errors |
 | 2026-04-07 | Amber card with numbered "What happens next" list added to FacultyRegister.jsx success state for unambiguous pending-approval feedback |
 
