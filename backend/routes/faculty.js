@@ -47,16 +47,34 @@ router.patch('/notifications/read', requireAuth, (req, res) => {
 });
 
 router.get('/available', (req, res) => {
-  const rows = db.prepare(`
-    SELECT
-      f.id, f.name, f.department, f.domain, f.max_teams,
-      COUNT(s.id) AS current_team_count
-    FROM faculty f
-    LEFT JOIN students s ON s.preferred_faculty_id = f.id
-    WHERE f.approved = 1
-    GROUP BY f.id
-    ORDER BY f.name ASC
-  `).all();
+  const { domain } = req.query;
+
+  let rows;
+  if (domain && domain.trim().length > 0) {
+    rows = db.prepare(`
+      SELECT
+        f.id, f.name, f.department, f.domain, f.max_teams,
+        COUNT(r.id) AS current_team_count
+      FROM faculty f
+      LEFT JOIN requests r ON r.faculty_id = f.id AND r.status = 'accepted'
+      WHERE f.approved = 1
+        AND LOWER(f.domain) LIKE LOWER(?)
+      GROUP BY f.id
+      ORDER BY f.name ASC
+    `).all(`%${domain.trim()}%`);
+  } else {
+    rows = db.prepare(`
+      SELECT
+        f.id, f.name, f.department, f.domain, f.max_teams,
+        COUNT(r.id) AS current_team_count
+      FROM faculty f
+      LEFT JOIN requests r ON r.faculty_id = f.id AND r.status = 'accepted'
+      WHERE f.approved = 1
+      GROUP BY f.id
+      ORDER BY f.name ASC
+    `).all();
+  }
+
   res.json(rows);
 });
 

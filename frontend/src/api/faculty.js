@@ -7,8 +7,11 @@ function authHeaders() {
   };
 }
 
-export async function getAvailableGuides() {
-  const res = await fetch(`${BASE_URL}/available`);
+export async function getAvailableGuides(domain) {
+  const url = domain && domain.trim().length > 0
+    ? `${BASE_URL}/available?domain=${encodeURIComponent(domain.trim())}`
+    : `${BASE_URL}/available`;
+  const res = await fetch(url);
   return res.json();
 }
 

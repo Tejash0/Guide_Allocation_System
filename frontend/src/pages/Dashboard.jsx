@@ -107,6 +107,7 @@ export default function Dashboard() {
   const [preferredId, setPreferredId] = useState(null);
   const [prefSaving, setPrefSaving] = useState(null);
   const [prefMsg, setPrefMsg] = useState('');
+  const [domainFilter, setDomainFilter] = useState('');
 
   // Request state
   const [myRequests, setMyRequests] = useState([]);
@@ -220,6 +221,17 @@ export default function Dashboard() {
       setPrefMsg('Network error — try again');
     }
     setPrefSaving(null);
+  };
+
+  const handleDomainFilter = async (domain) => {
+    const next = domain === domainFilter ? '' : domain; // clicking active chip clears it
+    setDomainFilter(next);
+    try {
+      const result = await getAvailableGuides(next || undefined);
+      setGuides(Array.isArray(result) ? result : []);
+    } catch {
+      // leave guides as-is on network error
+    }
   };
 
   const logout = () => {
@@ -356,7 +368,7 @@ export default function Dashboard() {
               <div className="anim" style={{ animationDelay: '0s' }}>
                 <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div style={{ fontSize: '1rem', fontWeight: 700, color: '#0d1b2a', fontFamily: 'Georgia, serif' }}>
-                    Available Faculty Guides ({guides.length})
+                    Available Faculty Guides ({guides.length}){domainFilter ? ` — "${domainFilter}"` : ''}
                   </div>
                   {prefMsg && (
                     <div style={{ fontSize: '0.8rem', color: prefMsg.includes('saved') ? '#166534' : '#991b1b',
@@ -366,6 +378,60 @@ export default function Dashboard() {
                     </div>
                   )}
                 </div>
+                {/* Domain filter chips */}
+                {(() => {
+                  const allTags = Array.from(
+                    new Set(
+                      guides.flatMap(g =>
+                        g.domain ? g.domain.split(',').map(d => d.trim()).filter(Boolean) : []
+                      )
+                    )
+                  ).sort();
+
+                  if (allTags.length === 0) return null;
+
+                  return (
+                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+                      <button
+                        onClick={() => handleDomainFilter('')}
+                        style={{
+                          padding: '4px 12px', borderRadius: 999, fontSize: '0.75rem',
+                          fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                          border: domainFilter === ''
+                            ? '1.5px solid #1e3a5f'
+                            : '1px solid rgba(30,58,95,0.25)',
+                          background: domainFilter === ''
+                            ? 'rgba(30,58,95,0.12)'
+                            : 'transparent',
+                          color: domainFilter === '' ? '#1e3a5f' : '#6b7280',
+                          transition: 'all 0.15s',
+                        }}
+                      >
+                        All
+                      </button>
+                      {allTags.map(tag => (
+                        <button
+                          key={tag}
+                          onClick={() => handleDomainFilter(tag)}
+                          style={{
+                            padding: '4px 12px', borderRadius: 999, fontSize: '0.75rem',
+                            fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                            border: domainFilter === tag
+                              ? '1.5px solid #1e3a5f'
+                              : '1px solid rgba(30,58,95,0.25)',
+                            background: domainFilter === tag
+                              ? 'rgba(30,58,95,0.12)'
+                              : 'transparent',
+                            color: domainFilter === tag ? '#1e3a5f' : '#6b7280',
+                            transition: 'all 0.15s',
+                          }}
+                        >
+                          {tag}
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()}
                 {guides.length === 0 ? (
                   <div style={{ background: '#fff', borderRadius: 14, padding: '48px', textAlign: 'center',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.04)', color: '#a0998f' }}>
