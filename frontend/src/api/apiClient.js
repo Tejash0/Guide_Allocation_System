@@ -21,6 +21,8 @@ export async function apiFetch(url, options = {}) {
     return { ok: false, error: 'Unexpected server response' };
   }
 
+  // Array responses (e.g. /faculty/available) can't be spread into an object
+  if (Array.isArray(json)) return json;
   return { ok: res.ok, ...json };
 }
 

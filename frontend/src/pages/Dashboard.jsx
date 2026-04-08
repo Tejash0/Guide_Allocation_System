@@ -146,7 +146,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (isStudent) {
-      getAvailableGuides().then(setGuides).catch(() => {});
+      getAvailableGuides().then(r => setGuides(Array.isArray(r) ? r : [])).catch(() => {});
       getPreference().then(d => d.preferred_faculty_id != null && setPreferredId(d.preferred_faculty_id)).catch(() => {});
       getInterests().then(d => { if (d.interests) { setInterestsInput(d.interests); setSavedInterests(d.interests); } }).catch(() => {});
       getMyRequests().then(r => { setMyRequests(Array.isArray(r) ? r : []); setSentIds(new Set((Array.isArray(r) ? r : []).map(x => x.faculty_id))); }).catch(() => {});
@@ -231,7 +231,7 @@ export default function Dashboard() {
         setPreferredId(facultyId);
         setSentIds(prev => new Set([...prev, facultyId]));
         setPrefMsg('Request sent to faculty!');
-        getAvailableGuides().then(setGuides).catch(() => {});
+        getAvailableGuides().then(r => setGuides(Array.isArray(r) ? r : [])).catch(() => {});
         getMyRequests().then(r => setMyRequests(Array.isArray(r) ? r : [])).catch(() => {});
       } else {
         setPrefMsg(res.error || 'Error sending request');
@@ -276,7 +276,7 @@ export default function Dashboard() {
       if (res.message) {
         setMyRequests(prev => prev.filter(r => r.id !== requestId));
         setSentIds(prev => { const next = new Set(prev); next.delete(facultyId); return next; });
-        getAvailableGuides().then(setGuides).catch(() => {});
+        getAvailableGuides().then(r => setGuides(Array.isArray(r) ? r : [])).catch(() => {});
       }
     } catch {}
   };
