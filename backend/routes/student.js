@@ -5,6 +5,16 @@ const { requireAuth } = require('../middleware/auth');
 const router = express.Router();
 router.use(requireAuth);
 
+router.get('/profile', (req, res) => {
+  if (req.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
+  const student = db.prepare('SELECT max_teams FROM students WHERE id = ?').get(req.user.id);
+  if (!student) return res.status(404).json({ error: 'Student not found' });
+  const { cnt: acceptedCount } = db.prepare(
+    "SELECT COUNT(*) AS cnt FROM requests WHERE student_id = ? AND status = 'accepted'"
+  ).get(req.user.id);
+  res.json({ max_teams: student.max_teams ?? 1, accepted_count: acceptedCount });
+});
+
 router.get('/preference', (req, res) => {
   if (req.user.role !== 'student') {
     return res.status(403).json({ error: 'Forbidden' });

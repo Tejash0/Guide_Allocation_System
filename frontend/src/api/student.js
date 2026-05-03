@@ -9,6 +9,10 @@ function headers() {
   };
 }
 
+export async function getStudentProfile() {
+  return apiFetch(`${BASE}/profile`, { headers: headers() });
+}
+
 export async function getPreference() {
   return apiFetch(`${BASE}/preference`, { headers: headers() });
 }

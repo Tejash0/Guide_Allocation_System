@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getAvailableGuides, getFacultyProfile, updateFacultyProfile, getNotifications, markNotificationsRead, setFacultyAvailability, getMyProblemStatements, addProblemStatement, deleteProblemStatement, getFacultyProblemStatements, getMyStudents, getStudentComments, addStudentComment } from '../api/faculty.js';
-import { getPreference, setPreference, getInterests, saveInterests, getProject, saveProject, getStudentNotifications, markStudentNotificationsRead, getProjectTemplates, saveProjectTemplate, deleteProjectTemplate, getProjectComments, replyToComment } from '../api/student.js';
+import { getStudentProfile, getPreference, setPreference, getInterests, saveInterests, getProject, saveProject, getStudentNotifications, markStudentNotificationsRead, getProjectTemplates, saveProjectTemplate, deleteProjectTemplate, getProjectComments, replyToComment } from '../api/student.js';
 import { sendRequest, getMyRequests, getIncomingRequests, updateRequestStatus, withdrawRequest } from '../api/requests.js';
 
 function decodeToken(token) {
@@ -113,6 +113,8 @@ export default function Dashboard() {
   const [myRequests, setMyRequests] = useState([]);
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [sentIds, setSentIds] = useState(new Set());
+  const [rejectedIds, setRejectedIds] = useState(new Set());
+  const [studentCapacity, setStudentCapacity] = useState({ max_teams: 1, accepted_count: 0 });
 
   // Student interests state
   const [interestsInput, setInterestsInput] = useState('');
@@ -155,6 +157,7 @@ export default function Dashboard() {
   const [selectedStatement, setSelectedStatement] = useState('');
   const [statementMode, setStatementMode] = useState('');
   const [sendingRequest, setSendingRequest] = useState(false);
+  const [sendRequestError, setSendRequestError] = useState('');
 
   // Student project templates
   const [projectTemplates, setProjectTemplates] = useState([]);
@@ -175,7 +178,13 @@ export default function Dashboard() {
       getAvailableGuides().then(r => setGuides(Array.isArray(r) ? r : [])).catch(() => {});
       getPreference().then(d => d.preferred_faculty_id != null && setPreferredId(d.preferred_faculty_id)).catch(() => {});
       getInterests().then(d => { if (d.interests) { setInterestsInput(d.interests); setSavedInterests(d.interests); } }).catch(() => {});
-      getMyRequests().then(r => { setMyRequests(Array.isArray(r) ? r : []); setSentIds(new Set((Array.isArray(r) ? r : []).map(x => x.faculty_id))); }).catch(() => {});
+      getMyRequests().then(r => {
+        const reqs = Array.isArray(r) ? r : [];
+        setMyRequests(reqs);
+        setSentIds(new Set(reqs.filter(x => x.status === 'pending').map(x => x.faculty_id)));
+        setRejectedIds(new Set(reqs.filter(x => x.status === 'rejected').map(x => x.faculty_id)));
+      }).catch(() => {});
+      getStudentProfile().then(p => { if (p && !p.error) setStudentCapacity(p); }).catch(() => {});
       getStudentNotifications().then(n => setStudentNotifs(Array.isArray(n) ? n : [])).catch(() => {});
       getProject().then(p => { if (p && !p.error) setProjectSaved(p); }).catch(() => {});
     } else {
@@ -201,12 +210,24 @@ export default function Dashboard() {
       getMyProblemStatements().then(r => setProblemStatements(Array.isArray(r) ? r : [])).catch(() => {});
     }
     if (isStudent && activeTab === 'Project') {
-      getMyRequests().then(r => { setMyRequests(Array.isArray(r) ? r : []); setSentIds(new Set((Array.isArray(r) ? r : []).map(x => x.faculty_id))); }).catch(() => {});
+      getMyRequests().then(r => {
+        const reqs = Array.isArray(r) ? r : [];
+        setMyRequests(reqs);
+        setSentIds(new Set(reqs.filter(x => x.status === 'pending').map(x => x.faculty_id)));
+        setRejectedIds(new Set(reqs.filter(x => x.status === 'rejected').map(x => x.faculty_id)));
+      }).catch(() => {});
       getProjectTemplates().then(r => setProjectTemplates(Array.isArray(r) ? r : [])).catch(() => {});
       getProjectComments().then(r => setProjectComments(Array.isArray(r) ? r : [])).catch(() => {});
     }
     if (isStudent && activeTab === 'Available Guides') {
       getProjectTemplates().then(r => setProjectTemplates(Array.isArray(r) ? r : [])).catch(() => {});
+      getStudentProfile().then(p => { if (p && !p.error) setStudentCapacity(p); }).catch(() => {});
+      getMyRequests().then(r => {
+        const reqs = Array.isArray(r) ? r : [];
+        setMyRequests(reqs);
+        setSentIds(new Set(reqs.filter(x => x.status === 'pending').map(x => x.faculty_id)));
+        setRejectedIds(new Set(reqs.filter(x => x.status === 'rejected').map(x => x.faculty_id)));
+      }).catch(() => {});
     }
     if (isStudent && activeTab === 'Submissions') {
       getProject().then(p => { if (p && !p.error) setProjectSaved(p); }).catch(() => {});
@@ -322,6 +343,7 @@ export default function Dashboard() {
     setSelectedGuide(guide);
     setSelectedStatement('');
     setStatementMode('');
+    setSendRequestError('');
     const stmts = await getFacultyProblemStatements(guide.id);
     setGuideStatements(Array.isArray(stmts) ? stmts : []);
   };
@@ -591,13 +613,18 @@ export default function Dashboard() {
                     {guides.map(g => {
                       const isSelected = g.id === preferredId;
                       const isFull = g.current_team_count >= g.max_teams;
+                      const _alreadyAccepted = myRequests.find(r => r.faculty_id === g.id && r.status === 'accepted');
+                      const _isPending = sentIds.has(g.id);
+                      const _wasRejected = rejectedIds.has(g.id);
+                      const _atCapacity = studentCapacity.accepted_count >= studentCapacity.max_teams;
+                      const cardClickable = !isFull && !_isPending && !_alreadyAccepted && !(_wasRejected && _atCapacity);
                       return (
-                        <div key={g.id} onClick={() => !isFull && openGuideModal(g)} style={{
+                        <div key={g.id} onClick={() => cardClickable && openGuideModal(g)} style={{
                           background: '#fff', borderRadius: 14, padding: '20px',
                           boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.04)',
                           border: isSelected ? '2px solid #c9a84c' : '2px solid transparent',
                           transition: 'border-color 0.2s, transform 0.15s',
-                          cursor: isFull ? 'default' : 'pointer',
+                          cursor: cardClickable ? 'pointer' : 'default',
                         }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
                             <div style={{
@@ -639,23 +666,46 @@ export default function Dashboard() {
                             {g.current_team_count} / {g.max_teams} slots filled
                           </div>
                           {(() => {
-                            const hasAccepted = myRequests.some(r => r.status === 'accepted');
-                            const isDisabled = isFull || prefSaving === g.id || sentIds.has(g.id) || hasAccepted;
-                            const alreadyAccepted = myRequests.find(r => r.faculty_id === g.id && r.status === 'accepted');
+                            const alreadyAccepted = _alreadyAccepted;
+                            const isPending = _isPending;
+                            const wasRejected = _wasRejected;
+                            const atCapacity = _atCapacity;
+                            const isDisabled = isFull || prefSaving === g.id || isPending || !!alreadyAccepted || (wasRejected && atCapacity);
+                            const btnLabel = prefSaving === g.id ? 'Sending…'
+                              : alreadyAccepted ? '✓ Your Guide'
+                              : isPending ? '✓ Request Sent'
+                              : isFull ? 'Full'
+                              : wasRejected ? (atCapacity ? 'Rejected' : 'Re-apply')
+                              : 'Send Guide Request';
+                            const btnBg = alreadyAccepted ? 'rgba(34,197,94,0.1)'
+                              : isPending ? 'rgba(201,168,76,0.1)'
+                              : wasRejected && atCapacity ? '#fee2e2'
+                              : wasRejected ? '#0d1b2a'
+                              : isDisabled ? '#f3f4f6'
+                              : '#0d1b2a';
+                            const btnColor = alreadyAccepted ? '#166534'
+                              : isPending ? '#b8923a'
+                              : wasRejected && atCapacity ? '#991b1b'
+                              : isDisabled ? '#9ca3af'
+                              : '#fff';
+                            const btnBorder = alreadyAccepted ? '1.5px solid #22c55e'
+                              : isPending ? '1.5px solid #c9a84c'
+                              : wasRejected && atCapacity ? '1.5px solid #fca5a5'
+                              : 'none';
                             return (
                               <button
                                 disabled={isDisabled}
-                                onClick={() => !hasAccepted && handleSelectGuide(g.id)}
+                                onClick={() => !isDisabled && openGuideModal(g)}
                                 style={{
                                   width: '100%', padding: '9px', borderRadius: 8,
-                                  border: alreadyAccepted ? '1.5px solid #22c55e' : sentIds.has(g.id) ? '1.5px solid #c9a84c' : 'none',
+                                  border: btnBorder,
                                   cursor: isDisabled ? 'default' : 'pointer',
-                                  background: alreadyAccepted ? 'rgba(34,197,94,0.1)' : sentIds.has(g.id) ? 'rgba(201,168,76,0.1)' : isFull || hasAccepted ? '#f3f4f6' : '#0d1b2a',
-                                  color: alreadyAccepted ? '#166534' : sentIds.has(g.id) ? '#b8923a' : isFull || hasAccepted ? '#9ca3af' : '#fff',
+                                  background: btnBg,
+                                  color: btnColor,
                                   fontWeight: 700, fontSize: '0.8rem', fontFamily: 'inherit',
                                   transition: 'all 0.15s',
                                 }}>
-                                {prefSaving === g.id ? 'Sending…' : alreadyAccepted ? '✓ Your Guide' : sentIds.has(g.id) ? '✓ Request Sent' : isFull ? 'Full' : hasAccepted ? 'Guide Confirmed' : 'Send Guide Request'}
+                                {btnLabel}
                               </button>
                             );
                           })()}
@@ -1862,33 +1912,47 @@ export default function Dashboard() {
             </div>
 
             {/* Action buttons */}
+            {sendRequestError && (
+              <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 8, background: '#fee2e2', color: '#991b1b', fontSize: '0.8rem', fontWeight: 600 }}>
+                {sendRequestError}
+              </div>
+            )}
             <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
               <button
                 onClick={closeGuideModal}
                 style={{ padding: '10px 20px', background: 'transparent', color: '#6b7280', border: '1.5px solid #e4e0da', borderRadius: 10, cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'inherit', fontWeight: 600 }}
               >Cancel</button>
               <button
-                disabled={!selectedStatement.trim() || sendingRequest}
+                disabled={!selectedStatement.trim() || sendingRequest || studentCapacity.accepted_count >= studentCapacity.max_teams}
                 onClick={async () => {
                   if (!selectedStatement.trim()) return;
+                  setSendRequestError('');
                   setSendingRequest(true);
                   const r = await sendRequest(selectedGuide.id, selectedStatement.trim());
                   setSendingRequest(false);
                   if (r.message) {
                     closeGuideModal();
                     const updated = await getMyRequests();
-                    if (Array.isArray(updated)) { setMyRequests(updated); setSentIds(new Set(updated.map(x => x.faculty_id))); }
+                    if (Array.isArray(updated)) {
+                      setMyRequests(updated);
+                      setSentIds(new Set(updated.filter(x => x.status === 'pending').map(x => x.faculty_id)));
+                      setRejectedIds(new Set(updated.filter(x => x.status === 'rejected').map(x => x.faculty_id)));
+                    }
+                    getStudentProfile().then(p => { if (p && !p.error) setStudentCapacity(p); }).catch(() => {});
+                  } else {
+                    setSendRequestError(r.error || 'Failed to send request');
                   }
                 }}
                 style={{
                   padding: '10px 24px', borderRadius: 10, fontWeight: 700, fontSize: '0.85rem', fontFamily: 'inherit',
-                  border: 'none', cursor: selectedStatement.trim() ? 'pointer' : 'not-allowed',
-                  background: selectedStatement.trim() ? '#0d1b2a' : '#f3f4f6',
-                  color: selectedStatement.trim() ? '#fff' : '#9ca3af',
+                  border: 'none',
+                  cursor: (!selectedStatement.trim() || studentCapacity.accepted_count >= studentCapacity.max_teams) ? 'not-allowed' : 'pointer',
+                  background: (!selectedStatement.trim() || studentCapacity.accepted_count >= studentCapacity.max_teams) ? '#f3f4f6' : '#0d1b2a',
+                  color: (!selectedStatement.trim() || studentCapacity.accepted_count >= studentCapacity.max_teams) ? '#9ca3af' : '#fff',
                   transition: 'all 0.2s',
                 }}
               >
-                {sendingRequest ? 'Sending…' : 'Send Request'}
+                {sendingRequest ? 'Sending…' : studentCapacity.accepted_count >= studentCapacity.max_teams ? 'Guide Limit Reached' : 'Send Request'}
               </button>
             </div>
           </div>
