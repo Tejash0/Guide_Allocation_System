@@ -1,0 +1,273 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="arrHollow" markerWidth="10" markerHeight="10" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L9,4 z" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+    </marker>
+    <marker id="diamond" markerWidth="10" markerHeight="8" refX="0" refY="4" orient="auto">
+      <path d="M0,4 L4,0 L8,4 L4,8 z" fill="#94a3b8"/>
+    </marker>
+    <marker id="diamondHollow" markerWidth="12" markerHeight="10" refX="0" refY="5" orient="auto">
+      <path d="M0,5 L5,0 L10,5 L5,10 z" fill="none" stroke="#94a3b8" stroke-width="1.2"/>
+    </marker>
+    <filter id="sh2">
+      <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="780" fill="url(#bg2)"/>
+  <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#ffffff" stroke-width="0.12" opacity="0.12"/>
+  </pattern>
+  <rect width="1100" height="780" fill="url(#grid2)"/>
+
+  <!-- Title -->
+  <text x="550" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#f1f5f9" letter-spacing="1">Guide Allocation System — UML Class Diagram</text>
+  <text x="550" y="60" text-anchor="middle" font-size="12" fill="#64748b">Domain Model · Entities · Relationships · Cardinality</text>
+  <line x1="60" y1="72" x2="1040" y2="72" stroke="#334155" stroke-width="1"/>
+
+  <!-- ════════════════════════════════════════
+       CLASS: Student
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <!-- Header -->
+    <rect x="40" y="92" width="240" height="36" rx="6" fill="#1d4ed8"/>
+    <text x="160" y="107" text-anchor="middle" font-size="8" fill="#bfdbfe" font-style="italic">«entity»</text>
+    <text x="160" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Student</text>
+    <!-- Attributes -->
+    <rect x="40" y="128" width="240" height="170" fill="#0f2e6e" stroke="#3b82f6" stroke-width="1.5"/>
+    <line x1="40" y1="148" x2="280" y2="148" stroke="#3b82f6" stroke-width="0.8"/>
+    <text x="50" y="144" font-size="10" font-weight="600" fill="#93c5fd">Attributes</text>
+    <text x="50" y="163" font-size="10" fill="#dbeafe">– id : INTEGER «PK»</text>
+    <text x="50" y="178" font-size="10" fill="#dbeafe">– name : TEXT</text>
+    <text x="50" y="193" font-size="10" fill="#dbeafe">– email : TEXT «unique»</text>
+    <text x="50" y="208" font-size="10" fill="#dbeafe">– student_id : TEXT «unique»</text>
+    <text x="50" y="223" font-size="10" fill="#dbeafe">– password_hash : TEXT</text>
+    <text x="50" y="238" font-size="10" fill="#dbeafe">– interests : TEXT</text>
+    <text x="50" y="253" font-size="10" fill="#dbeafe">– preferred_faculty_id : INT «FK»</text>
+    <text x="50" y="268" font-size="10" fill="#dbeafe">– project_title : TEXT</text>
+    <text x="50" y="283" font-size="10" fill="#dbeafe">– tech_stack · project_desc : TEXT</text>
+    <!-- Methods -->
+    <rect x="40" y="298" width="240" height="100" fill="#0d2660" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="0"/>
+    <line x1="40" y1="308" x2="280" y2="308" stroke="#3b82f6" stroke-width="0.8"/>
+    <text x="50" y="324" font-size="10" font-weight="600" fill="#93c5fd">Methods</text>
+    <text x="50" y="342" font-size="10" fill="#bfdbfe">+ register() : void</text>
+    <text x="50" y="357" font-size="10" fill="#bfdbfe">+ login() : JWT</text>
+    <text x="50" y="372" font-size="10" fill="#bfdbfe">+ sendGuideRequest(facultyId) : void</text>
+    <text x="50" y="387" font-size="10" fill="#bfdbfe">+ withdrawRequest(requestId) : void</text>
+    <!-- Bottom border -->
+    <line x1="40" y1="398" x2="280" y2="398" stroke="#3b82f6" stroke-width="1.5"/>
+    <rect x="40" y="398" width="240" height="2" rx="2" fill="#1d4ed8"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       CLASS: Faculty
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <rect x="430" y="92" width="240" height="36" rx="6" fill="#065f46"/>
+    <text x="550" y="107" text-anchor="middle" font-size="8" fill="#a7f3d0" font-style="italic">«entity»</text>
+    <text x="550" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Faculty</text>
+    <rect x="430" y="128" width="240" height="160" fill="#022c22" stroke="#10b981" stroke-width="1.5"/>
+    <line x1="430" y1="148" x2="670" y2="148" stroke="#10b981" stroke-width="0.8"/>
+    <text x="440" y="144" font-size="10" font-weight="600" fill="#6ee7b7">Attributes</text>
+    <text x="440" y="163" font-size="10" fill="#d1fae5">– id : INTEGER «PK»</text>
+    <text x="440" y="178" font-size="10" fill="#d1fae5">– name : TEXT</text>
+    <text x="440" y="193" font-size="10" fill="#d1fae5">– email : TEXT «unique»</text>
+    <text x="440" y="208" font-size="10" fill="#d1fae5">– department : TEXT</text>
+    <text x="440" y="223" font-size="10" fill="#d1fae5">– domain : TEXT</text>
+    <text x="440" y="238" font-size="10" fill="#d1fae5">– password_hash : TEXT</text>
+    <text x="440" y="253" font-size="10" fill="#d1fae5">– approved : INTEGER (0|1)</text>
+    <text x="440" y="268" font-size="10" fill="#d1fae5">– max_teams : INTEGER</text>
+    <rect x="430" y="288" width="240" height="110" fill="#021a11" stroke="#10b981" stroke-width="1.5"/>
+    <line x1="430" y1="298" x2="670" y2="298" stroke="#10b981" stroke-width="0.8"/>
+    <text x="440" y="314" font-size="10" font-weight="600" fill="#6ee7b7">Methods</text>
+    <text x="440" y="332" font-size="10" fill="#a7f3d0">+ register() : void</text>
+    <text x="440" y="347" font-size="10" fill="#a7f3d0">+ login() : JWT</text>
+    <text x="440" y="362" font-size="10" fill="#a7f3d0">+ viewIncomingRequests() : Request[]</text>
+    <text x="440" y="377" font-size="10" fill="#a7f3d0">+ updateRequestStatus(id, status)</text>
+    <text x="440" y="392" font-size="10" fill="#a7f3d0">+ setCapacity(max_teams) : void</text>
+    <line x1="430" y1="398" x2="670" y2="398" stroke="#10b981" stroke-width="1.5"/>
+    <rect x="430" y="398" width="240" height="2" rx="2" fill="#065f46"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       CLASS: Request
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <rect x="820" y="92" width="240" height="36" rx="6" fill="#7c2d12"/>
+    <text x="940" y="107" text-anchor="middle" font-size="8" fill="#fed7aa" font-style="italic">«entity»</text>
+    <text x="940" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">Request</text>
+    <rect x="820" y="128" width="240" height="120" fill="#431407" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="820" y1="148" x2="1060" y2="148" stroke="#f97316" stroke-width="0.8"/>
+    <text x="830" y="144" font-size="10" font-weight="600" fill="#fed7aa">Attributes</text>
+    <text x="830" y="163" font-size="10" fill="#ffedd5">– id : INTEGER «PK»</text>
+    <text x="830" y="178" font-size="10" fill="#ffedd5">– student_id : INTEGER «FK»</text>
+    <text x="830" y="193" font-size="10" fill="#ffedd5">– faculty_id : INTEGER «FK»</text>
+    <text x="830" y="208" font-size="10" fill="#ffedd5">– status : TEXT</text>
+    <text x="830" y="220" font-size="8.5" fill="#fb923c">  (pending | accepted | rejected)</text>
+    <text x="830" y="238" font-size="10" fill="#ffedd5">– created_at : DATETIME</text>
+    <rect x="820" y="248" width="240" height="150" fill="#3b0d00" stroke="#f97316" stroke-width="1.5"/>
+    <line x1="820" y1="258" x2="1060" y2="258" stroke="#f97316" stroke-width="0.8"/>
+    <text x="830" y="274" font-size="10" font-weight="600" fill="#fed7aa">Methods</text>
+    <text x="830" y="292" font-size="10" fill="#ffedd5">+ send() : void</text>
+    <text x="830" y="307" font-size="10" fill="#ffedd5">+ withdraw() : void</text>
+    <text x="830" y="322" font-size="10" fill="#ffedd5">+ accept() : void</text>
+    <text x="830" y="337" font-size="10" fill="#ffedd5">+ reject() : void</text>
+    <text x="830" y="352" font-size="10" fill="#ffedd5">+ autoRejectOthers() : void</text>
+    <text x="830" y="367" font-size="10" fill="#ffedd5">+ notifyStudent(msg) : void</text>
+    <text x="830" y="382" font-size="10" fill="#ffedd5">+ checkCapacity() : boolean</text>
+    <line x1="820" y1="398" x2="1060" y2="398" stroke="#f97316" stroke-width="1.5"/>
+    <rect x="820" y="398" width="240" height="2" rx="2" fill="#7c2d12"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       CLASS: Notification (Faculty)
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <rect x="430" y="460" width="240" height="30" rx="6" fill="#4c1d95"/>
+    <text x="550" y="474" text-anchor="middle" font-size="8" fill="#ddd6fe" font-style="italic">«entity»</text>
+    <text x="550" y="485" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">FacultyNotification</text>
+    <rect x="430" y="490" width="240" height="100" fill="#2e1065" stroke="#7c3aed" stroke-width="1.5"/>
+    <line x1="430" y1="510" x2="670" y2="510" stroke="#7c3aed" stroke-width="0.8"/>
+    <text x="440" y="506" font-size="10" font-weight="600" fill="#c4b5fd">Attributes</text>
+    <text x="440" y="525" font-size="10" fill="#ede9fe">– id : INTEGER «PK»</text>
+    <text x="440" y="540" font-size="10" fill="#ede9fe">– faculty_id : INTEGER «FK»</text>
+    <text x="440" y="555" font-size="10" fill="#ede9fe">– message : TEXT</text>
+    <text x="440" y="570" font-size="10" fill="#ede9fe">– read : INTEGER (0|1)</text>
+    <text x="440" y="585" font-size="10" fill="#ede9fe">– created_at : DATETIME</text>
+    <line x1="430" y1="590" x2="670" y2="590" stroke="#7c3aed" stroke-width="1.5"/>
+    <rect x="430" y="590" width="240" height="2" rx="2" fill="#4c1d95"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       CLASS: StudentNotification
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <rect x="40" y="460" width="240" height="30" rx="6" fill="#164e63"/>
+    <text x="160" y="474" text-anchor="middle" font-size="8" fill="#a5f3fc" font-style="italic">«entity»</text>
+    <text x="160" y="485" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">StudentNotification</text>
+    <rect x="40" y="490" width="240" height="100" fill="#0c2a32" stroke="#0891b2" stroke-width="1.5"/>
+    <line x1="40" y1="510" x2="280" y2="510" stroke="#0891b2" stroke-width="0.8"/>
+    <text x="50" y="506" font-size="10" font-weight="600" fill="#7dd3fc">Attributes</text>
+    <text x="50" y="525" font-size="10" fill="#e0f2fe">– id : INTEGER «PK»</text>
+    <text x="50" y="540" font-size="10" fill="#e0f2fe">– student_id : INTEGER «FK»</text>
+    <text x="50" y="555" font-size="10" fill="#e0f2fe">– message : TEXT</text>
+    <text x="50" y="570" font-size="10" fill="#e0f2fe">– read : INTEGER (0|1)</text>
+    <text x="50" y="585" font-size="10" fill="#e0f2fe">– created_at : DATETIME</text>
+    <line x1="40" y1="590" x2="280" y2="590" stroke="#0891b2" stroke-width="1.5"/>
+    <rect x="40" y="590" width="240" height="2" rx="2" fill="#164e63"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       CLASS: Admin (actor, no table)
+       ════════════════════════════════════════ -->
+  <g filter="url(#sh2)">
+    <rect x="820" y="460" width="240" height="30" rx="6" fill="#374151"/>
+    <text x="940" y="474" text-anchor="middle" font-size="8" fill="#d1d5db" font-style="italic">«actor / service»</text>
+    <text x="940" y="485" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Admin</text>
+    <rect x="820" y="490" width="240" height="100" fill="#1f2937" stroke="#6b7280" stroke-width="1.5"/>
+    <line x1="820" y1="510" x2="1060" y2="510" stroke="#6b7280" stroke-width="0.8"/>
+    <text x="830" y="506" font-size="10" font-weight="600" fill="#9ca3af">Methods</text>
+    <text x="830" y="525" font-size="10" fill="#e5e7eb">+ listPendingFaculty() : Faculty[]</text>
+    <text x="830" y="540" font-size="10" fill="#e5e7eb">+ approveFaculty(id) : void</text>
+    <text x="830" y="555" font-size="10" fill="#e5e7eb">+ rejectFaculty(id) : void</text>
+    <text x="830" y="570" font-size="10" fill="#e5e7eb">+ deleteFaculty(id) : void</text>
+    <text x="830" y="585" font-size="9" fill="#6b7280">  (no DB table — role in JWT payload)</text>
+    <line x1="820" y1="590" x2="1060" y2="590" stroke="#6b7280" stroke-width="1.5"/>
+    <rect x="820" y="590" width="240" height="2" rx="2" fill="#374151"/>
+  </g>
+
+  <!-- ════════════════════════════════════════
+       RELATIONSHIPS
+       ════════════════════════════════════════ -->
+
+  <!-- Student "sends" Request  1..* association -->
+  <!-- Orthogonal path: exit Student top → route above all classes at y=78 → enter Request top -->
+  <path d="M 280,92 L 280,78 L 820,78 L 820,92" fill="none" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="550" y="75" text-anchor="middle" font-size="10" fill="#94a3b8" font-style="italic">sends</text>
+  <text x="264" y="104" font-size="10" font-weight="700" fill="#60a5fa">1</text>
+  <text x="824" y="104" font-size="10" font-weight="700" fill="#60a5fa">0..*</text>
+
+  <!-- Faculty "receives" Request -->
+  <!-- Faculty right edge (670, 250) -> Request left edge (820, 250) -->
+  <line x1="670" y1="250" x2="820" y2="250" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="710" y="244" font-size="10" fill="#94a3b8" font-style="italic">receives</text>
+  <text x="676" y="260" font-size="10" font-weight="700" fill="#34d399">1</text>
+  <text x="800" y="260" font-size="10" font-weight="700" fill="#34d399">0..*</text>
+
+  <!-- Student "has" StudentNotification  (composition — filled diamond at Student) -->
+  <!-- Student bottom (160, 400) -> StudentNotification top (160, 460) -->
+  <line x1="160" y1="400" x2="160" y2="460" stroke="#94a3b8" stroke-width="1.5" marker-start="url(#diamond)" marker-end="url(#arr)"/>
+  <text x="166" y="436" font-size="10" fill="#94a3b8" font-style="italic">has</text>
+  <text x="168" y="408" font-size="10" font-weight="700" fill="#7dd3fc">1</text>
+  <text x="168" y="454" font-size="10" font-weight="700" fill="#7dd3fc">0..*</text>
+
+  <!-- Faculty "has" FacultyNotification  (composition) -->
+  <!-- Faculty bottom (550, 400) -> FacultyNotification top (550, 460) -->
+  <line x1="550" y1="400" x2="550" y2="460" stroke="#94a3b8" stroke-width="1.5" marker-start="url(#diamond)" marker-end="url(#arr)"/>
+  <text x="556" y="436" font-size="10" fill="#94a3b8" font-style="italic">has</text>
+  <text x="558" y="408" font-size="10" font-weight="700" fill="#c4b5fd">1</text>
+  <text x="558" y="454" font-size="10" font-weight="700" fill="#c4b5fd">0..*</text>
+
+  <!-- Admin "manages" Faculty  (dependency dashed) -->
+  <!-- Orthogonal path: Admin left → gap between cols → up through row gap → Faculty right side -->
+  <path d="M 820,480 L 740,480 L 740,340 L 670,340" fill="none" stroke="#6b7280" stroke-width="1.2" stroke-dasharray="6,3" marker-end="url(#arr)"/>
+  <text x="748" y="418" font-size="9" fill="#9ca3af" font-style="italic">«manages»</text>
+
+  <!-- Student "prefers" Faculty  (dependency, optional) -->
+  <!-- Routes through the 150px gap between Student right(280) and Faculty left(430) -->
+  <line x1="280" y1="340" x2="430" y2="290" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="348" y="305" font-size="9" fill="#fbbf24" font-style="italic">«prefers» 0..1</text>
+
+  <!-- ════════════════════════════════════════
+       STATE MACHINE NOTE for Request
+       ════════════════════════════════════════ -->
+  <rect x="40" y="630" width="350" height="130" rx="8" fill="#1c1917" stroke="#78716c" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="52" y="650" font-size="10" font-weight="700" fill="#a8a29e">Request State Machine</text>
+  <text x="52" y="668" font-size="10" fill="#78716c">●──[create]──▶</text>
+  <rect x="148" y="657" width="64" height="20" rx="4" fill="#292524" stroke="#fbbf24" stroke-width="1"/>
+  <text x="180" y="671" text-anchor="middle" font-size="9" fill="#fde68a">pending</text>
+  <line x1="212" y1="667" x2="240" y2="657" stroke="#78716c" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="244" y="654" font-size="9" fill="#6b7280">accept()</text>
+  <rect x="300" y="645" width="68" height="20" rx="4" fill="#052e16" stroke="#22c55e" stroke-width="1"/>
+  <text x="334" y="659" text-anchor="middle" font-size="9" fill="#86efac">accepted</text>
+  <line x1="212" y1="677" x2="240" y2="690" stroke="#78716c" stroke-width="1" marker-end="url(#arr)"/>
+  <text x="244" y="700" font-size="9" fill="#6b7280">reject()</text>
+  <rect x="300" y="680" width="68" height="20" rx="4" fill="#450a0a" stroke="#ef4444" stroke-width="1"/>
+  <text x="334" y="694" text-anchor="middle" font-size="9" fill="#fca5a5">rejected</text>
+  <!-- withdraw -->
+  <line x1="148" y1="672" x2="80" y2="710" stroke="#78716c" stroke-width="1" stroke-dasharray="4,2" marker-end="url(#arr)"/>
+  <text x="50" y="708" font-size="9" fill="#6b7280">withdraw()</text>
+  <text x="52" y="722" font-size="9" fill="#78716c">(deleted)</text>
+  <!-- auto-reject note -->
+  <line x1="334" y1="665" x2="334" y2="680" stroke="#78716c" stroke-width="1" stroke-dasharray="2,2"/>
+  <rect x="52" y="736" width="328" height="18" rx="3" fill="#1c1917"/>
+  <text x="58" y="749" font-size="9" fill="#78716c">On accept: all other pending requests auto-rejected; capacity checked</text>
+
+  <!-- ════════════════════════════════════════
+       LEGEND
+       ════════════════════════════════════════ -->
+  <rect x="430" y="630" width="620" height="130" rx="8" fill="#1c1917" stroke="#334155" stroke-width="1"/>
+  <text x="442" y="650" font-size="11" font-weight="700" fill="#94a3b8">Legend</text>
+
+  <line x1="442" y1="666" x2="492" y2="666" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="498" y="670" font-size="10" fill="#cbd5e1">Association (directed)</text>
+
+  <line x1="442" y1="686" x2="492" y2="686" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+  <text x="498" y="690" font-size="10" fill="#cbd5e1">Dependency / optional reference</text>
+
+  <!-- Composition diamond -->
+  <line x1="442" y1="706" x2="492" y2="706" stroke="#94a3b8" stroke-width="1.5" marker-start="url(#diamond)" marker-end="url(#arr)"/>
+  <text x="498" y="710" font-size="10" fill="#cbd5e1">Composition (strong ownership)</text>
+
+  <text x="442" y="730" font-size="10" fill="#cbd5e1">«stereotype»  UML stereotype annotation</text>
+  <text x="442" y="748" font-size="10" fill="#cbd5e1">«PK» = Primary Key  ·  «FK» = Foreign Key  ·  «unique» = unique constraint</text>
+  <text x="442" y="762" font-size="10" fill="#475569">Multiplicity:  1  one  ·  0..1  zero-or-one  ·  0..*  zero-or-many  ·  1..*  one-or-many</text>
+</svg>
