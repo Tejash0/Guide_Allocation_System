@@ -1,6 +1,6 @@
 # Guide Allocation System
 
-A web application for managing student-faculty guide allocation in academic settings. Students request faculty members as project guides; faculty review and accept or reject requests; admins oversee the system.
+A web application for managing student-faculty guide allocation in academic settings. Students request faculty members as project guides; faculty review and accept or reject requests, admins oversee the system.
 
 ## Tech Stack
 
