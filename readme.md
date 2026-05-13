@@ -22,8 +22,8 @@ A web application for managing student-faculty guide allocation in academic sett
 ```bash
 cd backend
 npm install
-npm run dev       # dev with auto-restart
-# npm start       # production
+npm run dev     
+# npm start     
 ```
 
 Runs at `http://localhost:3001`.
@@ -73,7 +73,7 @@ backend/
   routes/         # auth.js, admin.js, faculty.js, student.js, requests.js
 ```
 
-## Database
+# Database
 
 Inspect with:
 
